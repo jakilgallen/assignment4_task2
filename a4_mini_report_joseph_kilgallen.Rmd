@@ -22,6 +22,42 @@ library(lubridate)
 A 4 - 5 sentence "mini-introduction" to what this study is exploring, including basic background information about the subject, site and study (with citations as needed), and a brief overview of what is included in the exploratory report. You should probably do this last.
 
 ```{r}
+# Reading in the data
+bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
+
+# Doing some explorative analyses to understand the data and distributions
+ggplot(bonanza_hares, aes(x = weight, color = sex)) +
+  geom_histogram() +
+  facet_wrap(~sex)
+# Appears that the data by sex is somewhat normally distributed, with females reporting generally greater weights, perhaps this is being confounded by the samples for each sex?
+
+
+# Creating a subset of just juvenile hands to do some more descriptive stats on
+hares_juvenile <- bonanza_hares %>% 
+  select(c("date", "sex", "weight", "hindft", "b_key", "age", "grid", "trap")) %>% 
+  filter(age == "j") %>% 
+  mutate(date = mdy(date)) 
+
+# Creating a lil summary table
+hares_summary <- hares_juvenile %>% 
+  group_by(sex) %>% 
+  summarize(mean_wt = mean(weight, na.rm = TRUE), median_wt = median(weight, na.rm = TRUE), sd_wt= sd(weight, na.rm = TRUE), 
+            mean_hft = mean(hindft, na.rm = TRUE), median_hft = median(hindft, na.rm = TRUE), sd_hft= sd(hindft, na.rm = TRUE), 
+            sample_size= n())
+hares_summary
+
+# Running a t.test on the mean weights and hing length for male and female juvenile hares
+t.test(x = mean_wt_m, )
+# now comparing the two groups means for hndft and weight
+ggplot(hares_juvenile, aes(x = weight, y = hindft, color = sex)) +
+  geom_point() +
+  facet_wrap(~sex)
+
+# Appears to be a positive relationship between weight and hind ft length
+cor_weightnhft <- cor.test(hares_juvenile$weight, hares_juvenile$hindft)
+cor_weightnhft
+
+# 2 variables are highly correlated at .54, 
 
 ```
 
@@ -32,9 +68,32 @@ A 3 - 4 sentence section in which you briefly describe the data, including citat
 
 ## Exploratory findings: 
 
+```{r}
+hares_juvenile <- bonanza_hares %>% 
+  select(c("date", "sex", "weight", "hindft", "b_key", "age")) %>% 
+  filter(age == "j") %>% 
+  mutate(date = mdy(date)) 
+
+## Use this for count portion
+purple_summary <- purple_urchins %>% 
+  select(c("year_new", "site_full")) %>% 
+  count(site_full, year_new)
+
+# Using this new data table I Make an exploratory graph of counts of purple urchins recorded at each site over time for the years included in the study. 
+
+ggplot(purple_summary, aes(x= year_new, y= n)) +
+  geom_col(aes(color = site_full)) +
+  facet_wrap(~site_full) +
+  theme(legend.position = "none")
+```
+
+
 In this section, complete and communicate the following: 
 
 Annual juvenile hare trap counts. Count the total number of juvenile (age == "j") hare trappings during each year of the study (include all grid sites), and create a finalized data visualization of the counts by year. Include a figure caption below the figure in your report. 
+```{r}
+
+```
 
 Then, in 3 - 4 sentences below your figure, describe major takeaways from your graph about total snowshoe hare trappings at the site. You might consider:
 
@@ -49,12 +108,18 @@ Use `lubridate()` package to parse dates and pull out the year
 Use `count()` to count total number hares observed each year
 For this assignment, you do not need to worry about duplicate traps (there are very few), but if you're curious how you can use `janitor::get_dupes()`
 
-```{r}
 
-```
 
 # Visualize juvenile hare weights. 
 Create a finalized data visualization (or visualizations) in which you compare **juvenile hare weights by sex and site (grid)** (ignore other variables). You should include groups where these variables are not recorded (`NA`). Include finalized figure captions below your visualization(s).
+```{r}
+# Create a finalized data visualization (or visualizations) in which you compare **juvenile hare weights by sex and site (grid)** (ignore other variables). You should include groups where these variables are not recorded (`NA`). Include finalized figure captions below your visualization(s).
+
+ggplot(hares_juvenile, aes(x = weight, y = hindft, color = sex)) + # MODIFY THIS CODE
+  geom_point() +
+  facet_wrap(~sex)
+
+```
 
 Then, in 2 - 3 sentences below your visualization(s) describe in text the main takeaways that you would want the audience to understand from your figures.
 
@@ -64,9 +129,6 @@ How can I use faceting to simplify the comparisons into manageable pieces?
 Am I showing the audience the data, summary statistics, or both?
 Have I updated graph labels, headers in facets, etc. to make it as straightforward as possible for viewers?
 
-```{r}
-
-```
 
 
 ## Juvenile weight comparison (male & female snowshoe hares). Further compare mean weights for **juvenile male and female snowshoe hares** included in this study. In this section, you should include:
@@ -76,24 +138,45 @@ A 2 - 3 sentence comprehensive statement of the means comparison, including at l
 The actual difference in means
 Effect size (Cohen's *d*)
 Outcome of a two-sample t-test
- 
-Note: Exploratory graphs (e.g. histograms, QQ-plots) to explore assumptions of your t-test should not show up in your final knitted document, but you DO still need to create and think about them. If you want keep the code chunk containing those exploratory visualizations in your .Rmd but not appear in the knitted doc, you can add `include = FALSE` in the code chunk header.
 
 ```{r}
+# then I calculate the means for each treatment type separately so I can run the two sample t-test
+mean_treatment <- treatment_subset %>% 
+  filter(treatment == "ANNUAL") %>% 
+  pull(size)
 
+mean_control <- treatment_subset %>% 
+  filter(treatment == "CONTROL") %>% 
+ pull(size)
+
+# now I will run the t-test
+t_test_treatments <- t.test(mean_treatment, mean_control)
+t_test_treatments
 ```
 
 
 ## Relationship between juvenile weight & hind foot length. 
-Explore the relationship between juvenile snowshoe hare hind foot length (variable `hindft`, recorded in millimeters), and weight. Include all juvenile hares in the study. Create a final visualization of juvenile hare hind foot length versus weight. Include a figure caption.
+Explore the relationship between juvenile snowshoe hare hind foot length (variable `hindft`, recorded in millimeters), and weight. Include all juvenile hares in the study. 
 
-Upon seeing your graph, your “boss” tells you to try out linear regression to describe how juvenile snowshoe hare weight changes with respect to hind foot length. Try it out (the only variables you are expected to include here are hind foot length and weight, using data for all juvenile hares in the data, e.g. you are not expected to explore impacts of sex, site, etc.), and check the model diagnostics.
+```{r}
+# Appears to be a positive relationship between weight and hind ft length
+cor_weightnhft <- cor.test(hares_juvenile$weight, hares_juvenile$hindft)
+cor_weightnhft
+
+# Create a final visualization of juvenile hare hind foot length versus weight. Include a figure caption- UPDATEEEE
+ggplot(hares_juvenile, aes(x = weight, y = hindft, color = sex)) +
+  geom_point() +
+  facet_wrap(~sex)
+
+#Upon seeing your graph, your “boss” tells you to try out linear regression to describe how juvenile snowshoe hare weight changes with respect to hind foot length. Try it out (the only variables you are expected to include here are hind foot length and weight, using data for all juvenile hares in the data, e.g. you are not expected to explore impacts of sex, site, etc.), and check the model diagnostics.
+
+```
 
 In 2 - 3 sentences below your figure, describe the outcome of your linear regression exploration (e.g. slope interpretation, R2 value, and Pearson's r correlation) and touch briefly on which assumption(s) of linear regression may be a concern, and additional thoughts you have about how well (or not well…) the linear model describes the relationship. What worries you? 
 
-```{r}
 
-```
+
+
 
 
 ## Summary: 
@@ -103,6 +186,9 @@ Include a very short summary describing your main findings from your juvenile ha
 ## Citations: 
 Include citations (professionally formatted), including the data citation and any other resources that were references in your mini report. 
 
+Data citation: Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14
+
+Link to metadata: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-bnz.55.22
 
 
 
