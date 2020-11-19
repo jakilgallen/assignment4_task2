@@ -1,0 +1,122 @@
+---
+title: "mini_report_joseph_kilgallen"
+author: "Joseph Kilgallen"
+date: "11/19/2020"
+output: html_document
+---
+# Exploratory Report of Juvenile Snowdshoe Hares from Bonanza Creek Experimental Forest
+
+Create your organized mini exploratory report in an R Markdown document. The knitted document should include only your final text and figures (code, exploratory analyses, messages and warnings should not appear in the knitted document). 
+
+```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Loading packages
+library(tidyverse)
+library(here)
+library(janitor)
+library(lubridate)
+```
+
+## Introduction: 
+
+A 4 - 5 sentence "mini-introduction" to what this study is exploring, including basic background information about the subject, site and study (with citations as needed), and a brief overview of what is included in the exploratory report. You should probably do this last.
+
+```{r}
+
+```
+
+
+## Data and analyses: 
+
+A 3 - 4 sentence section in which you briefly describe the data, including citation & credit as needed, and provide an overview of the main analysis, statistical methods and tools used.
+
+## Exploratory findings: 
+
+In this section, complete and communicate the following: 
+
+Annual juvenile hare trap counts. Count the total number of juvenile (age == "j") hare trappings during each year of the study (include all grid sites), and create a finalized data visualization of the counts by year. Include a figure caption below the figure in your report. 
+
+Then, in 3 - 4 sentences below your figure, describe major takeaways from your graph about total snowshoe hare trappings at the site. You might consider:
+
+What were the minimum and maximum counts of juvenile hare trappings?
+Mean or median annual number of juvenile hares trapped?
+General/notable trends?
+These are absolute counts, but this count is also impacted by effort (e.g. the number of days and number of traps in the study each year). What would you suggest be done moving forward (you are not expected to actually do this) to standardize the juvenile hare population in future analyses?
+
+			Additional tips for this part: 
+
+Use `lubridate()` package to parse dates and pull out the year
+Use `count()` to count total number hares observed each year
+For this assignment, you do not need to worry about duplicate traps (there are very few), but if you're curious how you can use `janitor::get_dupes()`
+
+```{r}
+
+```
+
+# Visualize juvenile hare weights. 
+Create a finalized data visualization (or visualizations) in which you compare **juvenile hare weights by sex and site (grid)** (ignore other variables). You should include groups where these variables are not recorded (`NA`). Include finalized figure captions below your visualization(s).
+
+Then, in 2 - 3 sentences below your visualization(s) describe in text the main takeaways that you would want the audience to understand from your figures.
+
+Note: There are multiple ways to visualize these comparisons. We encourage you to think carefully then make decisions about how to visualize these comparisons, including:
+
+How can I use faceting to simplify the comparisons into manageable pieces?
+Am I showing the audience the data, summary statistics, or both?
+Have I updated graph labels, headers in facets, etc. to make it as straightforward as possible for viewers?
+
+```{r}
+
+```
+
+
+## Juvenile weight comparison (male & female snowshoe hares). Further compare mean weights for **juvenile male and female snowshoe hares** included in this study. In this section, you should include:
+
+A finalized table containing the mean, standard deviation, and sample size for male and female juvenile snowshoe hares, with a table caption (remember, this is placed *above* the table in your report)
+A 2 - 3 sentence comprehensive statement of the means comparison, including at least:
+The actual difference in means
+Effect size (Cohen's *d*)
+Outcome of a two-sample t-test
+ 
+Note: Exploratory graphs (e.g. histograms, QQ-plots) to explore assumptions of your t-test should not show up in your final knitted document, but you DO still need to create and think about them. If you want keep the code chunk containing those exploratory visualizations in your .Rmd but not appear in the knitted doc, you can add `include = FALSE` in the code chunk header.
+
+```{r}
+
+```
+
+
+## Relationship between juvenile weight & hind foot length. 
+Explore the relationship between juvenile snowshoe hare hind foot length (variable `hindft`, recorded in millimeters), and weight. Include all juvenile hares in the study. Create a final visualization of juvenile hare hind foot length versus weight. Include a figure caption.
+
+Upon seeing your graph, your “boss” tells you to try out linear regression to describe how juvenile snowshoe hare weight changes with respect to hind foot length. Try it out (the only variables you are expected to include here are hind foot length and weight, using data for all juvenile hares in the data, e.g. you are not expected to explore impacts of sex, site, etc.), and check the model diagnostics.
+
+In 2 - 3 sentences below your figure, describe the outcome of your linear regression exploration (e.g. slope interpretation, R2 value, and Pearson's r correlation) and touch briefly on which assumption(s) of linear regression may be a concern, and additional thoughts you have about how well (or not well…) the linear model describes the relationship. What worries you? 
+
+```{r}
+
+```
+
+
+## Summary: 
+Include a very short summary describing your main findings from your juvenile hares exploration (bulletpoints are fine)
+
+
+## Citations: 
+Include citations (professionally formatted), including the data citation and any other resources that were references in your mini report. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
